@@ -11,7 +11,7 @@ import com.blackrook.expression.ExpressionStack;
 import com.blackrook.expression.ExpressionVariableContext;
 
 /**
- * Describes a type of RookScript function entry point.
+ * Describes a type of function entry point.
  * @author Matthew Tropiano
  */
 public interface ExpressionFunctionType
