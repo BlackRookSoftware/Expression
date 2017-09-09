@@ -123,7 +123,17 @@ public class ExpressionDirective implements ExpressionNode
 				sw.writeDouble((Double)operand);
 			else if (operand instanceof Boolean)
 				sw.writeBoolean((Boolean)operand);
+			else if (operand instanceof String)
+				sw.writeString((String)operand);
 		}
 	}
 
+	@Override
+	public String toString()
+	{
+		StringBuilder sb = new StringBuilder();
+		sb.append(type.name()).append(' ').append(String.valueOf(operand));
+		return sb.toString();
+	}
+	
 }

@@ -59,4 +59,10 @@ public class ExpressionFunction implements ExpressionNode
 		sw.writeString(type.name());
 	}
 
+	@Override
+	public String toString()
+	{
+		return type.name();
+	}
+
 }

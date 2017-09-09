@@ -9,6 +9,7 @@ package com.blackrook.expression.node;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.Arrays;
 
 import com.blackrook.commons.Common;
 import com.blackrook.expression.ExpressionNode;
@@ -124,6 +125,17 @@ public class ExpressionBranch implements ExpressionNode
 			node.writeBytes(out);
 		if (!Common.isEmpty(failureBlock)) for (ExpressionNode node : failureBlock)
 			node.writeBytes(out);
+	}
+
+	@Override
+	public String toString()
+	{
+		StringBuilder sb = new StringBuilder();
+		sb.append("COND: ").append(Arrays.toString(conditional));
+		sb.append("SUCCESS: ").append(Arrays.toString(conditional));
+		if (failureBlock != null)
+			sb.append("FAILURE: ").append(Arrays.toString(conditional));
+		return sb.toString();
 	}
 
 }
