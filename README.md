@@ -1,8 +1,13 @@
 # Black Rook Expressions
 
-Copyright (c) 2017 Black Rook Software. All rights reserved.  
+Copyright (c) 2017-2018 Black Rook Software. All rights reserved.  
 [http://blackrooksoftware.com/projects.htm?name=expressions](http://blackrooksoftware.com/projects.htm?name=expressions)  
 [https://github.com/BlackRookSoftware/Expressions](https://github.com/BlackRookSoftware/Expressions)
+
+### NOTICE
+
+This library is currently in **EXPERIMENTAL** status. This library's API
+may change many times in different ways over the course of its development!
 
 ### Required Libraries
 
@@ -14,6 +19,10 @@ Black Rook Common I/O 2.5.0+
 
 Black Rook Common Lang 2.10.0+  
 [https://github.com/BlackRookSoftware/CommonLang](https://github.com/BlackRookSoftware/CommonLang)
+
+### Required Java Modules
+
+[java.base](https://docs.oracle.com/javase/10/docs/api/java.base-summary.html)  
 
 ### Introduction
 
