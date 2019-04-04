@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2017-2018 Black Rook Software
+ * Copyright (c) 2017-2019 Black Rook Software
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Arrays;
 
-import com.blackrook.commons.Common;
+import com.blackrook.commons.util.ObjectUtils;
 import com.blackrook.expression.ExpressionNode;
 import com.blackrook.expression.ExpressionStack;
 import com.blackrook.expression.ExpressionValue;
@@ -84,7 +84,7 @@ public class ExpressionBranch implements ExpressionNode
 			if (!node.isCollapsable())
 				return false;
 		
-		if (!Common.isEmpty(failureBlock)) 
+		if (!ObjectUtils.isEmpty(failureBlock)) 
 		{
 			for (ExpressionNode node : failureBlock)
 				if (!node.isCollapsable())
@@ -107,7 +107,7 @@ public class ExpressionBranch implements ExpressionNode
 				if (!successBlock[i].execute(stack, context))
 					return false;
 		}
-		else if (!Common.isEmpty(failureBlock))
+		else if (!ObjectUtils.isEmpty(failureBlock))
 		{
 			for (int i = 0; i < failureBlock.length; i++)
 				if (!failureBlock[i].execute(stack, context))
@@ -123,7 +123,7 @@ public class ExpressionBranch implements ExpressionNode
 			node.writeBytes(out);
 		for (ExpressionNode node : successBlock)
 			node.writeBytes(out);
-		if (!Common.isEmpty(failureBlock)) for (ExpressionNode node : failureBlock)
+		if (!ObjectUtils.isEmpty(failureBlock)) for (ExpressionNode node : failureBlock)
 			node.writeBytes(out);
 	}
 

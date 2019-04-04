@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2017-2018 Black Rook Software
+ * Copyright (c) 2017-2019 Black Rook Software
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
@@ -9,8 +9,8 @@ package com.blackrook.expression;
 
 import java.util.Comparator;
 
-import com.blackrook.commons.Common;
 import com.blackrook.commons.Sizable;
+import com.blackrook.commons.util.ArrayUtils;
 
 /**
  * An open variable set in which values can be set.
@@ -123,7 +123,7 @@ public class ExpressionVariableContext implements ExpressionVariableSet, Sizable
 			expand(entries.length * 2);
 		entries[entryCount].name = name;
 		entries[entryCount].value.set(value);
-		Common.sortFrom(entries, entryCount, ENTRY_COMPARATOR);
+		ArrayUtils.sortFrom(entries, entryCount, ENTRY_COMPARATOR);
 		entryCount++;
 	}
 
@@ -145,7 +145,7 @@ public class ExpressionVariableContext implements ExpressionVariableSet, Sizable
 			expand(entries.length * 2);
 		entries[entryCount].name = name;
 		entries[entryCount].value.set(value);
-		Common.sortFrom(entries, entryCount, ENTRY_COMPARATOR);
+		ArrayUtils.sortFrom(entries, entryCount, ENTRY_COMPARATOR);
 		entryCount++;
 	}
 
@@ -167,7 +167,7 @@ public class ExpressionVariableContext implements ExpressionVariableSet, Sizable
 			expand(entries.length * 2);
 		entries[entryCount].name = name;
 		entries[entryCount].value.set(value);
-		Common.sortFrom(entries, entryCount, ENTRY_COMPARATOR);
+		ArrayUtils.sortFrom(entries, entryCount, ENTRY_COMPARATOR);
 		entryCount++;
 	}
 
@@ -189,7 +189,7 @@ public class ExpressionVariableContext implements ExpressionVariableSet, Sizable
 			expand(entries.length * 2);
 		entries[entryCount].name = name;
 		entries[entryCount].value.set(value);
-		Common.sortFrom(entries, entryCount, ENTRY_COMPARATOR);
+		ArrayUtils.sortFrom(entries, entryCount, ENTRY_COMPARATOR);
 		entryCount++;
 	}
 

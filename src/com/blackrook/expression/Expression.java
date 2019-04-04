@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2017-2018 Black Rook Software
+ * Copyright (c) 2017-2019 Black Rook Software
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
@@ -10,8 +10,8 @@ package com.blackrook.expression;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
-import com.blackrook.commons.Common;
 import com.blackrook.commons.hash.HashMap;
+import com.blackrook.commons.util.EncodingUtils;
 import com.blackrook.expression.exception.ExpressionException;
 import com.blackrook.expression.node.ExpressionBranch;
 
@@ -296,7 +296,7 @@ public class Expression
 				}
 				
 				StringBuilder sb = new StringBuilder();
-				for (byte b : Common.sha1(bos.toByteArray()))
+				for (byte b : EncodingUtils.sha1(bos.toByteArray()))
 					sb.append(String.format("%02x", b));
 				
 				return (digest = sb.toString());
