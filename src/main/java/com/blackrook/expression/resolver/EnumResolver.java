@@ -7,7 +7,9 @@
  ******************************************************************************/
 package com.blackrook.expression.resolver;
 
-import com.blackrook.commons.hash.CaseInsensitiveHashMap;
+import java.util.HashMap;
+import java.util.Map;
+
 import com.blackrook.expression.ExpressionFunctionResolver;
 import com.blackrook.expression.node.ExpressionFunctionType;
 
@@ -17,7 +19,7 @@ import com.blackrook.expression.node.ExpressionFunctionType;
  */
 public class EnumResolver implements ExpressionFunctionResolver
 {
-	private CaseInsensitiveHashMap<ExpressionFunctionType> map;
+	private Map<String, ExpressionFunctionType> map;
 	
 	/**
 	 * Creates a new resolver using a list of enum values.
@@ -26,7 +28,7 @@ public class EnumResolver implements ExpressionFunctionResolver
 	@SafeVarargs
 	public EnumResolver(Enum<? extends ExpressionFunctionType> ... en)
 	{
-		this.map = new CaseInsensitiveHashMap<>(10, 1f);
+		this.map = new HashMap<>(10, 1f);
 		for (Enum<? extends ExpressionFunctionType> e : en)
 			map.put(e.name(), (ExpressionFunctionType)e);
 	}

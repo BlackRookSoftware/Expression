@@ -10,8 +10,7 @@ package com.blackrook.expression;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import com.blackrook.commons.util.ThreadUtils;
-import com.blackrook.io.SuperWriter;
+import com.blackrook.expression.util.SerialWriter;
 
 /**
  * Expression value encapsulation.
@@ -464,7 +463,7 @@ public class ExpressionValue implements Comparable<ExpressionValue>
 	 */
 	public static void add(ExpressionValue operand, ExpressionValue operand2, ExpressionValue out)
 	{
-		Cache cacheValue = getCache();
+		Cache cacheValue = CACHE.get();
 		cacheValue.value1.set(operand);
 		cacheValue.value2.set(operand2);
 		if (operand.type.ordinal() < operand2.type.ordinal())
@@ -496,7 +495,7 @@ public class ExpressionValue implements Comparable<ExpressionValue>
 	 */
 	public static void subtract(ExpressionValue operand, ExpressionValue operand2, ExpressionValue out)
 	{
-		Cache cacheValue = getCache();
+		Cache cacheValue = CACHE.get();
 		cacheValue.value1.set(operand);
 		cacheValue.value2.set(operand2);
 		if (operand.type.ordinal() < operand2.type.ordinal())
@@ -529,7 +528,7 @@ public class ExpressionValue implements Comparable<ExpressionValue>
 	 */
 	public static void multiply(ExpressionValue operand, ExpressionValue operand2, ExpressionValue out)
 	{
-		Cache cacheValue = getCache();
+		Cache cacheValue = CACHE.get();
 		cacheValue.value1.set(operand);
 		cacheValue.value2.set(operand2);
 		if (operand.type.ordinal() < operand2.type.ordinal())
@@ -561,7 +560,7 @@ public class ExpressionValue implements Comparable<ExpressionValue>
 	 */
 	public static void divide(ExpressionValue operand, ExpressionValue operand2, ExpressionValue out)
 	{
-		Cache cacheValue = getCache();
+		Cache cacheValue = CACHE.get();
 		cacheValue.value1.set(operand);
 		cacheValue.value2.set(operand2);
 		if (operand.type.ordinal() < operand2.type.ordinal())
@@ -597,7 +596,7 @@ public class ExpressionValue implements Comparable<ExpressionValue>
 	 */
 	public static void modulo(ExpressionValue operand, ExpressionValue operand2, ExpressionValue out)
 	{
-		Cache cacheValue = getCache();
+		Cache cacheValue = CACHE.get();
 		cacheValue.value1.set(operand);
 		cacheValue.value2.set(operand2);
 		if (operand.type.ordinal() < operand2.type.ordinal())
@@ -633,7 +632,7 @@ public class ExpressionValue implements Comparable<ExpressionValue>
 	 */
 	public static void and(ExpressionValue operand, ExpressionValue operand2, ExpressionValue out)
 	{
-		Cache cacheValue = getCache();
+		Cache cacheValue = CACHE.get();
 		cacheValue.value1.set(operand);
 		cacheValue.value2.set(operand2);
 		if (operand.type.ordinal() < operand2.type.ordinal())
@@ -663,7 +662,7 @@ public class ExpressionValue implements Comparable<ExpressionValue>
 	 */
 	public static void or(ExpressionValue operand, ExpressionValue operand2, ExpressionValue out)
 	{
-		Cache cacheValue = getCache();
+		Cache cacheValue = CACHE.get();
 		cacheValue.value1.set(operand);
 		cacheValue.value2.set(operand2);
 		if (operand.type.ordinal() < operand2.type.ordinal())
@@ -693,7 +692,7 @@ public class ExpressionValue implements Comparable<ExpressionValue>
 	 */
 	public static void xor(ExpressionValue operand, ExpressionValue operand2, ExpressionValue out)
 	{
-		Cache cacheValue = getCache();
+		Cache cacheValue = CACHE.get();
 		cacheValue.value1.set(operand);
 		cacheValue.value2.set(operand2);
 		if (operand.type.ordinal() < operand2.type.ordinal())
@@ -904,22 +903,13 @@ public class ExpressionValue implements Comparable<ExpressionValue>
 	 */
 	public void writeBytes(OutputStream out) throws IOException
 	{
-		SuperWriter sw = new SuperWriter(out, SuperWriter.LITTLE_ENDIAN);
-		sw.writeVariableLengthInt(type.ordinal());
-		sw.writeLong(rawbits);
+		SerialWriter sw = new SerialWriter(SerialWriter.LITTLE_ENDIAN);
+		sw.writeVariableLengthInt(out, type.ordinal());
+		sw.writeLong(out, rawbits);
 	}
 	
-	private static final String CACHE_NAME = "$$"+Cache.class.getCanonicalName();
+	private static final ThreadLocal<Cache> CACHE = ThreadLocal.withInitial(()->new Cache());
 
-	// Get the cache.
-	private static Cache getCache()
-	{
-		Cache out;
-		if ((out = (Cache)ThreadUtils.getLocal(CACHE_NAME)) == null)
-			ThreadUtils.setLocal(CACHE_NAME, out = new Cache());
-		return out;
-	}
-	
 	// Mathematics cache.
 	private static class Cache
 	{

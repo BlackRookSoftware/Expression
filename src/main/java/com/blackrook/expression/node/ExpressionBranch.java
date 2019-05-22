@@ -11,11 +11,11 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Arrays;
 
-import com.blackrook.commons.util.ObjectUtils;
 import com.blackrook.expression.ExpressionNode;
 import com.blackrook.expression.ExpressionStack;
 import com.blackrook.expression.ExpressionValue;
 import com.blackrook.expression.ExpressionVariableContext;
+import com.blackrook.expression.util.Utils;
 
 /**
  * Expression branch.
@@ -84,7 +84,7 @@ public class ExpressionBranch implements ExpressionNode
 			if (!node.isCollapsable())
 				return false;
 		
-		if (!ObjectUtils.isEmpty(failureBlock)) 
+		if (!Utils.isEmpty(failureBlock)) 
 		{
 			for (ExpressionNode node : failureBlock)
 				if (!node.isCollapsable())
@@ -107,7 +107,7 @@ public class ExpressionBranch implements ExpressionNode
 				if (!successBlock[i].execute(stack, context))
 					return false;
 		}
-		else if (!ObjectUtils.isEmpty(failureBlock))
+		else if (!Utils.isEmpty(failureBlock))
 		{
 			for (int i = 0; i < failureBlock.length; i++)
 				if (!failureBlock[i].execute(stack, context))
@@ -123,7 +123,7 @@ public class ExpressionBranch implements ExpressionNode
 			node.writeBytes(out);
 		for (ExpressionNode node : successBlock)
 			node.writeBytes(out);
-		if (!ObjectUtils.isEmpty(failureBlock)) for (ExpressionNode node : failureBlock)
+		if (!Utils.isEmpty(failureBlock)) for (ExpressionNode node : failureBlock)
 			node.writeBytes(out);
 	}
 

@@ -7,7 +7,9 @@
  ******************************************************************************/
 package com.blackrook.expression.resolver;
 
-import com.blackrook.commons.linkedlist.Queue;
+import java.util.LinkedList;
+import java.util.Queue;
+
 import com.blackrook.expression.ExpressionFunctionResolver;
 import com.blackrook.expression.node.ExpressionFunctionType;
 
@@ -25,7 +27,7 @@ public class MultiResolver implements ExpressionFunctionResolver
 	 */
 	public MultiResolver(ExpressionFunctionResolver ... resolvers)
 	{
-		this.resolvers = new Queue<>();
+		this.resolvers = new LinkedList<>();
 		for (ExpressionFunctionResolver r : resolvers)
 			this.resolvers.add(r);
 	}

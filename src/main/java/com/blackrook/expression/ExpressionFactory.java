@@ -9,19 +9,16 @@ package com.blackrook.expression;
 
 import java.io.Reader;
 import java.io.StringReader;
+import java.util.LinkedList;
+import java.util.Queue;
 
-import com.blackrook.commons.linkedlist.Queue;
-import com.blackrook.commons.linkedlist.Stack;
 import com.blackrook.expression.exception.ExpressionParseException;
 import com.blackrook.expression.node.ExpressionBranch;
 import com.blackrook.expression.node.ExpressionDirective;
 import com.blackrook.expression.node.ExpressionDirectiveType;
 import com.blackrook.expression.node.ExpressionFunction;
 import com.blackrook.expression.node.ExpressionFunctionType;
-import com.blackrook.lang.Lexer;
-import com.blackrook.lang.LexerKernel;
-import com.blackrook.lang.Parser;
-import com.blackrook.lang.ReaderStack;
+import com.blackrook.expression.util.Lexer;
 
 /**
  * Creates expression objects from input text.
@@ -126,33 +123,7 @@ public final class ExpressionFactory
 		return e;
 	}
 
-	/**
-	 * Parses a single-line expression.
-	 * The expression returned may be a reference to an expression parsed before, due to intern-ing it.
-	 * @param readerStack the reader stack to parse from.
-	 * @param resolver the resolver object for resolving functions in the script.
-	 * @return the expression parsed.
-	 * @throws ExpressionParseException if a parse error occurs.
-	 */
-	public static Expression parseExpression(ReaderStack readerStack, ExpressionFunctionResolver resolver)
-	{
-		return (new EParser(readerStack, resolver)).parseExpressionPhrase();
-	}
-
-	/**
-	 * Parses an expression block (multi-line/statement expression).
-	 * The expression returned may be a reference to an expression parsed before, due to intern-ing it.
-	 * @param readerStack the reader stack to parse from.
-	 * @param resolver the resolver object for resolving functions in the script.
-	 * @return the expression parsed.
-	 * @throws ExpressionParseException if a parse error occurs.
-	 */
-	public static Expression parseExpressionBlock(ReaderStack readerStack, ExpressionFunctionResolver resolver)
-	{
-		return (new EParser(readerStack, resolver)).parseExpressionBlock();
-	}
-
-	private static class EKernel extends LexerKernel
+	private static class EKernel extends Lexer.Kernel
 	{
 		public static final int TYPE_COMMENT = 0;
 		public static final int TYPE_LPAREN = 1;
@@ -251,21 +222,16 @@ public final class ExpressionFactory
 	/**
 	 * Parser. 
 	 */
-	private static class EParser extends Parser
+	private static class EParser extends Lexer.Parser
 	{
 		private static final EKernel KERNEL = new EKernel();
 		
 		private ExpressionFunctionResolver functionResolver;
+		private LinkedList<String> errorMessages;
 		
 		private EParser(Reader reader, ExpressionFunctionResolver resolver)
 		{
 			super(new Lexer(KERNEL, reader));
-			this.functionResolver = resolver;
-		}
-
-		private EParser(ReaderStack readerStack, ExpressionFunctionResolver resolver)
-		{
-			super(new Lexer(KERNEL, readerStack));
 			this.functionResolver = resolver;
 		}
 
@@ -276,7 +242,7 @@ public final class ExpressionFactory
 		Expression parseExpressionBlock()
 		{
 			nextToken();
-			Queue<ExpressionNode> nodeList = new Queue<>();
+			Queue<ExpressionNode> nodeList = new LinkedList<>();
 			if (!parseExpressionStatementList(nodeList))
 			{
 				String[] errors = getErrorMessages();
@@ -305,6 +271,18 @@ public final class ExpressionFactory
 			return expression.intern();
 		}
 
+		private void addErrorMessage(String message)
+		{
+			errorMessages.add(message);
+		}
+
+		private String[] getErrorMessages()
+		{
+			String[] out = new String[errorMessages.size()];
+			errorMessages.toArray(out);
+			return out; 
+		}
+		
 		/**
 		 * Parses an expression phrase.
 		 * @return the expression parsed.
@@ -312,7 +290,7 @@ public final class ExpressionFactory
 		Expression parseExpressionPhrase()
 		{
 			nextToken();
-			Queue<ExpressionNode> nodeList = new Queue<>();
+			Queue<ExpressionNode> nodeList = new LinkedList<>();
 			if (!parseExpressionPhrase(nodeList))
 			{
 				String[] errors = getErrorMessages();
@@ -457,7 +435,7 @@ public final class ExpressionFactory
 				return false;
 			}
 		
-			Queue<ExpressionNode> conditionalList = new Queue<>();
+			Queue<ExpressionNode> conditionalList = new LinkedList<>();
 			if (!parseExpressionPhrase(conditionalList))
 				return false;
 			
@@ -467,14 +445,14 @@ public final class ExpressionFactory
 				return false;
 			}
 		
-			Queue<ExpressionNode> successList = new Queue<>();
+			Queue<ExpressionNode> successList = new LinkedList<>();
 			if (!parseExpressionBlock(successList))
 				return false;
 			
 			ExpressionNode[] failureNodes = null;
 			if (matchType(EKernel.TYPE_ELSE))
 			{
-				Queue<ExpressionNode> failureList = new Queue<>();
+				Queue<ExpressionNode> failureList = new LinkedList<>();
 				if (!parseExpressionBlock(failureList))
 					return false;
 				
@@ -490,7 +468,7 @@ public final class ExpressionFactory
 		private boolean parseExpressionPhrase(Queue<ExpressionNode> nodeList)
 		{
 			// make stacks.
-			Stack<Integer> operatorStack = new Stack<>();
+			LinkedList<Integer> operatorStack = new LinkedList<>();
 			int[] expressionValueCounter = new int[1];
 		    
 		    // was the last read token a value?
@@ -547,7 +525,7 @@ public final class ExpressionFactory
 		    	        if (!operatorReduce(nodeList, operatorStack, expressionValueCounter, nextOperator))
 		    	        	return false;
 		    	        
-		    	        operatorStack.push(nextOperator);
+		    	        operatorStack.addFirst(nextOperator);
 		    	        lastWasValue = false;
 		    		}
 		    		else
@@ -743,7 +721,7 @@ public final class ExpressionFactory
 		}
 
 		// Operator reduce.
-		private boolean operatorReduce(Queue<ExpressionNode> nodeList, Stack<Integer> operatorStack, int[] expressionValueCounter, int nextOperator) 
+		private boolean operatorReduce(Queue<ExpressionNode> nodeList, LinkedList<Integer> operatorStack, int[] expressionValueCounter, int nextOperator) 
 		{
 			Integer top = operatorStack.peek();
 			while (top != null && (getOperatorPrecedence(top) > getOperatorPrecedence(nextOperator) || (getOperatorPrecedence(top) == getOperatorPrecedence(nextOperator) && !isOperatorRightAssociative(nextOperator))))
@@ -757,12 +735,12 @@ public final class ExpressionFactory
 		}
 
 		// Reduces an expression by operator.
-		private boolean expressionReduce(Queue<ExpressionNode> nodeList, Stack<Integer> operatorStack, int[] expressionValueCounter)
+		private boolean expressionReduce(Queue<ExpressionNode> nodeList, LinkedList<Integer> operatorStack, int[] expressionValueCounter)
 		{
 			if (operatorStack.isEmpty())
 		        throw new ExpressionParseException("Internal error - operator stack must have one operator in it.");
 		
-		    int operator = operatorStack.pop();
+		    int operator = operatorStack.pollFirst();
 		    
 		    if (isBinaryOperatorType(operator))
 		        expressionValueCounter[0] -= 2;

@@ -7,13 +7,13 @@
  ******************************************************************************/
 package com.blackrook.expression.functions;
 
-import com.blackrook.commons.math.RMath;
 import com.blackrook.expression.ExpressionFunctionResolver;
 import com.blackrook.expression.ExpressionStack;
 import com.blackrook.expression.ExpressionValue;
 import com.blackrook.expression.ExpressionVariableContext;
 import com.blackrook.expression.node.ExpressionFunctionType;
 import com.blackrook.expression.resolver.EnumResolver;
+import com.blackrook.expression.util.Utils;
 
 /**
  * Expression functions.
@@ -92,7 +92,7 @@ public enum CommonFunctions implements ExpressionFunctionType
 			ExpressionValue arg3 = stack.pop();
 			ExpressionValue arg2 = stack.pop();
 			ExpressionValue arg1 = stack.pop();
-			stack.push(RMath.clampValue(arg1.asDouble(), arg2.asDouble(), arg3.asDouble()));
+			stack.push(Utils.clampValue(arg1.asDouble(), arg2.asDouble(), arg3.asDouble()));
 			return true;
 		}
 	},
@@ -108,7 +108,7 @@ public enum CommonFunctions implements ExpressionFunctionType
 			ExpressionValue arg3 = stack.pop();
 			ExpressionValue arg2 = stack.pop();
 			ExpressionValue arg1 = stack.pop();
-			stack.push(RMath.wrapValue(arg1.asDouble(), arg2.asDouble(), arg3.asDouble()));
+			stack.push(Utils.wrapValue(arg1.asDouble(), arg2.asDouble(), arg3.asDouble()));
 			return true;
 		}
 	},
@@ -124,7 +124,7 @@ public enum CommonFunctions implements ExpressionFunctionType
 			ExpressionValue arg3 = stack.pop();
 			ExpressionValue arg2 = stack.pop();
 			ExpressionValue arg1 = stack.pop();
-			stack.push(RMath.linearInterpolate(arg1.asDouble(), arg2.asDouble(), arg3.asDouble()));
+			stack.push(Utils.linearInterpolate(arg1.asDouble(), arg2.asDouble(), arg3.asDouble()));
 			return true;
 		}
 	},
@@ -222,7 +222,7 @@ public enum CommonFunctions implements ExpressionFunctionType
 		public boolean execute(ExpressionStack stack, ExpressionVariableContext context)
 		{
 			ExpressionValue arg = stack.pop();
-			stack.push(RMath.degToRad(arg.asDouble()));
+			stack.push(Utils.degToRad(arg.asDouble()));
 			return true;
 		}
 	},
@@ -236,7 +236,7 @@ public enum CommonFunctions implements ExpressionFunctionType
 		public boolean execute(ExpressionStack stack, ExpressionVariableContext context)
 		{
 			ExpressionValue arg = stack.pop();
-			stack.push(RMath.radToDeg(arg.asDouble()));
+			stack.push(Utils.radToDeg(arg.asDouble()));
 			return true;
 		}
 	},

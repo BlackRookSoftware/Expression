@@ -9,15 +9,14 @@ package com.blackrook.expression;
 
 import java.util.Comparator;
 
-import com.blackrook.commons.Sizable;
-import com.blackrook.commons.util.ArrayUtils;
+import com.blackrook.expression.util.Utils;
 
 /**
  * An open variable set in which values can be set.
  * The internals are written so that the storage uses few memory allocations/deletions. 
  * @author Matthew Tropiano
  */
-public class ExpressionVariableContext implements ExpressionVariableSet, Sizable
+public class ExpressionVariableContext implements ExpressionVariableSet
 {
 	/** Default capacity. */
 	public static final int DEFAULT_CAPACITY = 4;
@@ -123,7 +122,7 @@ public class ExpressionVariableContext implements ExpressionVariableSet, Sizable
 			expand(entries.length * 2);
 		entries[entryCount].name = name;
 		entries[entryCount].value.set(value);
-		ArrayUtils.sortFrom(entries, entryCount, ENTRY_COMPARATOR);
+		Utils.sortFrom(entries, entryCount, ENTRY_COMPARATOR);
 		entryCount++;
 	}
 
@@ -145,7 +144,7 @@ public class ExpressionVariableContext implements ExpressionVariableSet, Sizable
 			expand(entries.length * 2);
 		entries[entryCount].name = name;
 		entries[entryCount].value.set(value);
-		ArrayUtils.sortFrom(entries, entryCount, ENTRY_COMPARATOR);
+		Utils.sortFrom(entries, entryCount, ENTRY_COMPARATOR);
 		entryCount++;
 	}
 
@@ -167,7 +166,7 @@ public class ExpressionVariableContext implements ExpressionVariableSet, Sizable
 			expand(entries.length * 2);
 		entries[entryCount].name = name;
 		entries[entryCount].value.set(value);
-		ArrayUtils.sortFrom(entries, entryCount, ENTRY_COMPARATOR);
+		Utils.sortFrom(entries, entryCount, ENTRY_COMPARATOR);
 		entryCount++;
 	}
 
@@ -189,17 +188,21 @@ public class ExpressionVariableContext implements ExpressionVariableSet, Sizable
 			expand(entries.length * 2);
 		entries[entryCount].name = name;
 		entries[entryCount].value.set(value);
-		ArrayUtils.sortFrom(entries, entryCount, ENTRY_COMPARATOR);
+		Utils.sortFrom(entries, entryCount, ENTRY_COMPARATOR);
 		entryCount++;
 	}
 
-	@Override
+	/**
+	 * @return the amount of variables maintained by this context.
+	 */
 	public int size()
 	{
 		return entryCount;
 	}
 
-	@Override
+	/**
+	 * @return true if this has no variables, false of not.
+	 */
 	public boolean isEmpty()
 	{
 		return size() == 0;

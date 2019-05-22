@@ -7,7 +7,6 @@
  ******************************************************************************/
 package com.blackrook.expression.node;
 
-import com.blackrook.commons.util.ThreadUtils;
 import com.blackrook.expression.Expression;
 import com.blackrook.expression.ExpressionStack;
 import com.blackrook.expression.ExpressionValue;
@@ -46,7 +45,7 @@ public enum ExpressionDirectiveType
 		@Override
 		public boolean execute(ExpressionStack stack, ExpressionVariableContext context, Object operand)
 		{
-			Cache cache = getCache();
+			Cache cache = CACHE.get();
 			if (operand instanceof Long)
 				cache.tempValue.set((Long)operand);
 			else if (operand instanceof Double)
@@ -115,7 +114,7 @@ public enum ExpressionDirectiveType
 			ExpressionValue value = stack.pop();
 			if (value == null)
 				throw new ExpressionException("Stack underflow!");
-			Cache cache = getCache();
+			Cache cache = CACHE.get();
 			ExpressionValue.logicalNot(value, cache.tempValue);
 			stack.push(cache.tempValue);
 			return true;
@@ -133,7 +132,7 @@ public enum ExpressionDirectiveType
 			ExpressionValue value = stack.pop();
 			if (value == null)
 				throw new ExpressionException("Stack underflow!");
-			Cache cache = getCache();
+			Cache cache = CACHE.get();
 			ExpressionValue.negate(value, cache.tempValue);
 			stack.push(cache.tempValue);
 			return true;
@@ -151,7 +150,7 @@ public enum ExpressionDirectiveType
 			ExpressionValue value = stack.pop();
 			if (value == null)
 				throw new ExpressionException("Stack underflow!");
-			Cache cache = getCache();
+			Cache cache = CACHE.get();
 			ExpressionValue.absolute(value, cache.tempValue);
 			stack.push(cache.tempValue);
 			return true;
@@ -169,7 +168,7 @@ public enum ExpressionDirectiveType
 			ExpressionValue value = stack.pop();
 			if (value == null)
 				throw new ExpressionException("Stack underflow!");
-			Cache cache = getCache();
+			Cache cache = CACHE.get();
 			ExpressionValue.logicalNot(value, cache.tempValue);
 			stack.push(cache.tempValue);
 			return true;
@@ -190,7 +189,7 @@ public enum ExpressionDirectiveType
 			ExpressionValue value1 = stack.pop();
 			if (value1 == null)
 				throw new ExpressionException("Stack underflow!");
-			Cache cache = getCache();
+			Cache cache = CACHE.get();
 			ExpressionValue.add(value1, value2, cache.tempValue);
 			stack.push(cache.tempValue);
 			return true;
@@ -211,7 +210,7 @@ public enum ExpressionDirectiveType
 			ExpressionValue value1 = stack.pop();
 			if (value1 == null)
 				throw new ExpressionException("Stack underflow!");
-			Cache cache = getCache();
+			Cache cache = CACHE.get();
 			ExpressionValue.subtract(value1, value2, cache.tempValue);
 			stack.push(cache.tempValue);
 			return true;
@@ -232,7 +231,7 @@ public enum ExpressionDirectiveType
 			ExpressionValue value1 = stack.pop();
 			if (value1 == null)
 				throw new ExpressionException("Stack underflow!");
-			Cache cache = getCache();
+			Cache cache = CACHE.get();
 			ExpressionValue.multiply(value1, value2, cache.tempValue);
 			stack.push(cache.tempValue);
 			return true;
@@ -253,7 +252,7 @@ public enum ExpressionDirectiveType
 			ExpressionValue value1 = stack.pop();
 			if (value1 == null)
 				throw new ExpressionException("Stack underflow!");
-			Cache cache = getCache();
+			Cache cache = CACHE.get();
 			ExpressionValue.divide(value1, value2, cache.tempValue);
 			stack.push(cache.tempValue);
 			return true;
@@ -274,7 +273,7 @@ public enum ExpressionDirectiveType
 			ExpressionValue value1 = stack.pop();
 			if (value1 == null)
 				throw new ExpressionException("Stack underflow!");
-			Cache cache = getCache();
+			Cache cache = CACHE.get();
 			ExpressionValue.modulo(value1, value2, cache.tempValue);
 			stack.push(cache.tempValue);
 			return true;
@@ -295,7 +294,7 @@ public enum ExpressionDirectiveType
 			ExpressionValue value1 = stack.pop();
 			if (value1 == null)
 				throw new ExpressionException("Stack underflow!");
-			Cache cache = getCache();
+			Cache cache = CACHE.get();
 			ExpressionValue.and(value1, value2, cache.tempValue);
 			stack.push(cache.tempValue);
 			return true;
@@ -316,7 +315,7 @@ public enum ExpressionDirectiveType
 			ExpressionValue value1 = stack.pop();
 			if (value1 == null)
 				throw new ExpressionException("Stack underflow!");
-			Cache cache = getCache();
+			Cache cache = CACHE.get();
 			ExpressionValue.or(value1, value2, cache.tempValue);
 			stack.push(cache.tempValue);
 			return true;
@@ -337,7 +336,7 @@ public enum ExpressionDirectiveType
 			ExpressionValue value1 = stack.pop();
 			if (value1 == null)
 				throw new ExpressionException("Stack underflow!");
-			Cache cache = getCache();
+			Cache cache = CACHE.get();
 			ExpressionValue.xor(value1, value2, cache.tempValue);
 			stack.push(cache.tempValue);
 			return true;
@@ -358,7 +357,7 @@ public enum ExpressionDirectiveType
 			ExpressionValue value1 = stack.pop();
 			if (value1 == null)
 				throw new ExpressionException("Stack underflow!");
-			Cache cache = getCache();
+			Cache cache = CACHE.get();
 			ExpressionValue.logicalAnd(value1, value2, cache.tempValue);
 			stack.push(cache.tempValue);
 			return true;
@@ -379,7 +378,7 @@ public enum ExpressionDirectiveType
 			ExpressionValue value1 = stack.pop();
 			if (value1 == null)
 				throw new ExpressionException("Stack underflow!");
-			Cache cache = getCache();
+			Cache cache = CACHE.get();
 			ExpressionValue.logicalOr(value1, value2, cache.tempValue);
 			stack.push(cache.tempValue);
 			return true;
@@ -400,7 +399,7 @@ public enum ExpressionDirectiveType
 			ExpressionValue value1 = stack.pop();
 			if (value1 == null)
 				throw new ExpressionException("Stack underflow!");
-			Cache cache = getCache();
+			Cache cache = CACHE.get();
 			ExpressionValue.leftShift(value1, value2, cache.tempValue);
 			stack.push(cache.tempValue);
 			return true;
@@ -421,7 +420,7 @@ public enum ExpressionDirectiveType
 			ExpressionValue value1 = stack.pop();
 			if (value1 == null)
 				throw new ExpressionException("Stack underflow!");
-			Cache cache = getCache();
+			Cache cache = CACHE.get();
 			ExpressionValue.rightShift(value1, value2, cache.tempValue);
 			stack.push(cache.tempValue);
 			return true;
@@ -442,7 +441,7 @@ public enum ExpressionDirectiveType
 			ExpressionValue value1 = stack.pop();
 			if (value1 == null)
 				throw new ExpressionException("Stack underflow!");
-			Cache cache = getCache();
+			Cache cache = CACHE.get();
 			ExpressionValue.rightShiftPadded(value1, value2, cache.tempValue);
 			stack.push(cache.tempValue);
 			return true;
@@ -463,7 +462,7 @@ public enum ExpressionDirectiveType
 			ExpressionValue value1 = stack.pop();
 			if (value1 == null)
 				throw new ExpressionException("Stack underflow!");
-			Cache cache = getCache();
+			Cache cache = CACHE.get();
 			ExpressionValue.less(value1, value2, cache.tempValue);
 			stack.push(cache.tempValue);
 			return true;
@@ -484,7 +483,7 @@ public enum ExpressionDirectiveType
 			ExpressionValue value1 = stack.pop();
 			if (value1 == null)
 				throw new ExpressionException("Stack underflow!");
-			Cache cache = getCache();
+			Cache cache = CACHE.get();
 			ExpressionValue.lessOrEqual(value1, value2, cache.tempValue);
 			stack.push(cache.tempValue);
 			return true;
@@ -505,7 +504,7 @@ public enum ExpressionDirectiveType
 			ExpressionValue value1 = stack.pop();
 			if (value1 == null)
 				throw new ExpressionException("Stack underflow!");
-			Cache cache = getCache();
+			Cache cache = CACHE.get();
 			ExpressionValue.greater(value1, value2, cache.tempValue);
 			stack.push(cache.tempValue);
 			return true;
@@ -526,7 +525,7 @@ public enum ExpressionDirectiveType
 			ExpressionValue value1 = stack.pop();
 			if (value1 == null)
 				throw new ExpressionException("Stack underflow!");
-			Cache cache = getCache();
+			Cache cache = CACHE.get();
 			ExpressionValue.greaterOrEqual(value1, value2, cache.tempValue);
 			stack.push(cache.tempValue);
 			return true;
@@ -547,7 +546,7 @@ public enum ExpressionDirectiveType
 			ExpressionValue value1 = stack.pop();
 			if (value1 == null)
 				throw new ExpressionException("Stack underflow!");
-			Cache cache = getCache();
+			Cache cache = CACHE.get();
 			ExpressionValue.equal(value1, value2, cache.tempValue);
 			stack.push(cache.tempValue);
 			return true;
@@ -568,7 +567,7 @@ public enum ExpressionDirectiveType
 			ExpressionValue value1 = stack.pop();
 			if (value1 == null)
 				throw new ExpressionException("Stack underflow!");
-			Cache cache = getCache();
+			Cache cache = CACHE.get();
 			ExpressionValue.notEqual(value1, value2, cache.tempValue);
 			stack.push(cache.tempValue);
 			return true;
@@ -589,7 +588,7 @@ public enum ExpressionDirectiveType
 			ExpressionValue value1 = stack.pop();
 			if (value1 == null)
 				throw new ExpressionException("Stack underflow!");
-			Cache cache = getCache();
+			Cache cache = CACHE.get();
 			ExpressionValue.strictEqual(value1, value2, cache.tempValue);
 			stack.push(cache.tempValue);
 			return true;
@@ -610,7 +609,7 @@ public enum ExpressionDirectiveType
 			ExpressionValue value1 = stack.pop();
 			if (value1 == null)
 				throw new ExpressionException("Stack underflow!");
-			Cache cache = getCache();
+			Cache cache = CACHE.get();
 			ExpressionValue.strictNotEqual(value1, value2, cache.tempValue);
 			stack.push(cache.tempValue);
 			return true;
@@ -637,17 +636,8 @@ public enum ExpressionDirectiveType
 	 */
 	public abstract boolean execute(ExpressionStack stack, ExpressionVariableContext context, Object operand);
 
-	private static final String CACHE_NAME = "$$"+Cache.class.getCanonicalName();
+	private static final ThreadLocal<Cache> CACHE = ThreadLocal.withInitial(()->new Cache());
 
-	// Get the cache.
-	private static Cache getCache()
-	{
-		Cache out;
-		if ((out = (Cache)ThreadUtils.getLocal(CACHE_NAME)) == null)
-			ThreadUtils.setLocal(CACHE_NAME, out = new Cache());
-		return out;
-	}
-	
 	// Expression cache.
 	private static class Cache
 	{

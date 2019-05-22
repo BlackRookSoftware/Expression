@@ -9,11 +9,12 @@ package com.blackrook.expression;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
-import com.blackrook.commons.hash.HashMap;
-import com.blackrook.commons.util.EncodingUtils;
 import com.blackrook.expression.exception.ExpressionException;
 import com.blackrook.expression.node.ExpressionBranch;
+import com.blackrook.expression.util.Utils;
 
 /**
  * An expression object for evaluating dynamic calculations.
@@ -26,7 +27,7 @@ public class Expression
 	public static final String RETURN_VARIABLE = "-0. Return .0-";
 
 	/** Map of internalized expressions. */
-	private static final HashMap<String, Expression> EXPRESSION_INTERN_MAP;
+	private static final Map<String, Expression> EXPRESSION_INTERN_MAP;
 
 	/** Expression: literal true. */
 	public static final Expression TRUE;
@@ -296,7 +297,7 @@ public class Expression
 				}
 				
 				StringBuilder sb = new StringBuilder();
-				for (byte b : EncodingUtils.sha1(bos.toByteArray()))
+				for (byte b : Utils.sha1(bos.toByteArray()))
 					sb.append(String.format("%02x", b));
 				
 				return (digest = sb.toString());
@@ -315,9 +316,12 @@ public class Expression
 	{
 		String digest = getDigest();
 		Expression out;
-		if ((out = EXPRESSION_INTERN_MAP.get(digest)) != null)
-			return out;
-		EXPRESSION_INTERN_MAP.put(digest, out = this);
+		synchronized (EXPRESSION_INTERN_MAP)
+		{
+			if ((out = EXPRESSION_INTERN_MAP.get(digest)) != null)
+				return out;
+			EXPRESSION_INTERN_MAP.put(digest, out = this);
+		}
 		return out;
 	}
 	

@@ -13,7 +13,7 @@ import java.io.OutputStream;
 import com.blackrook.expression.ExpressionNode;
 import com.blackrook.expression.ExpressionStack;
 import com.blackrook.expression.ExpressionVariableContext;
-import com.blackrook.io.SuperWriter;
+import com.blackrook.expression.util.SerialWriter;
 
 /**
  * Single expression directive.
@@ -112,19 +112,19 @@ public class ExpressionDirective implements ExpressionNode
 	@Override
 	public void writeBytes(OutputStream out) throws IOException
 	{
-		SuperWriter sw = new SuperWriter(out, SuperWriter.LITTLE_ENDIAN);
-		sw.writeVariableLengthInt(type.ordinal());
-		sw.writeBoolean(operand != null);
+		SerialWriter sw = new SerialWriter(SerialWriter.LITTLE_ENDIAN);
+		sw.writeVariableLengthInt(out, type.ordinal());
+		sw.writeBoolean(out, operand != null);
 		if (operand != null)
 		{
 			if (operand instanceof Long)
-				sw.writeLong((Long)operand);
+				sw.writeLong(out, (Long)operand);
 			else if (operand instanceof Double)
-				sw.writeDouble((Double)operand);
+				sw.writeDouble(out, (Double)operand);
 			else if (operand instanceof Boolean)
-				sw.writeBoolean((Boolean)operand);
+				sw.writeBoolean(out, (Boolean)operand);
 			else if (operand instanceof String)
-				sw.writeString((String)operand);
+				sw.writeString(out, (String)operand);
 		}
 	}
 

@@ -7,13 +7,11 @@
  ******************************************************************************/
 package com.blackrook.expression;
 
-import com.blackrook.commons.Sizable;
-
 /**
  * A calculation stack for expression calculation.
  * @author Matthew Tropiano
  */
-public class ExpressionStack implements Sizable
+public class ExpressionStack
 {
 	/** Default capacity. */
 	public static final int DEFAULT_CAPACITY = 8;
@@ -133,13 +131,17 @@ public class ExpressionStack implements Sizable
 		this.count = 0;
 	}
 
-	@Override
+	/**
+	 * @return 
+	 */
 	public int size()
 	{
 		return count;
 	}
 
-	@Override
+	/**
+	 * @return
+	 */
 	public boolean isEmpty()
 	{
 		return size() == 0;

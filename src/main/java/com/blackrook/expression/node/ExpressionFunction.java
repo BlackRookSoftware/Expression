@@ -13,7 +13,7 @@ import java.io.OutputStream;
 import com.blackrook.expression.ExpressionNode;
 import com.blackrook.expression.ExpressionStack;
 import com.blackrook.expression.ExpressionVariableContext;
-import com.blackrook.io.SuperWriter;
+import com.blackrook.expression.util.SerialWriter;
 
 /**
  * Single expression function.
@@ -55,8 +55,7 @@ public class ExpressionFunction implements ExpressionNode
 	@Override
 	public void writeBytes(OutputStream out) throws IOException
 	{
-		SuperWriter sw = new SuperWriter(out, SuperWriter.LITTLE_ENDIAN);
-		sw.writeString(type.name());
+		(new SerialWriter(SerialWriter.LITTLE_ENDIAN)).writeString(out, type.name());
 	}
 
 	@Override
