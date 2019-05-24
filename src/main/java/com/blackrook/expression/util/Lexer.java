@@ -1662,20 +1662,6 @@ public class Lexer
 		return c == NEWLINE;
 	}
 
-	/**
-	 * Constructs a line for error messages.
-	 * @param token the token that is the subject of the error.
-	 * @return an error string.
-	 */
-	protected String getErrorLine(Token token)
-	{
-		StringBuilder sb = new StringBuilder();
-		if (token.streamName != null)
-			sb.append('(').append(token.streamName).append(')').append(' ');
-		sb.append("Line ").append(token.lineNumber).append(", token \"").append(token.lexeme).append('"');
-		return sb.toString();
-	}
-	
 	// Closes stuff.
 	private static void close(AutoCloseable c)
 	{
