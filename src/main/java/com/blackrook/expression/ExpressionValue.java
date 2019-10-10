@@ -10,7 +10,7 @@ package com.blackrook.expression;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import com.blackrook.expression.util.SerialWriter;
+import com.blackrook.expression.struct.SerialWriter;
 
 /**
  * Expression value encapsulation.

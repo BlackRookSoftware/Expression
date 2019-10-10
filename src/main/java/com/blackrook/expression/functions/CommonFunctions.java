@@ -13,7 +13,7 @@ import com.blackrook.expression.ExpressionValue;
 import com.blackrook.expression.ExpressionVariableContext;
 import com.blackrook.expression.node.ExpressionFunctionType;
 import com.blackrook.expression.resolver.EnumResolver;
-import com.blackrook.expression.util.Utils;
+import com.blackrook.expression.struct.Utils;
 
 /**
  * Expression functions.

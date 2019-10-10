@@ -9,7 +9,7 @@ package com.blackrook.expression;
 
 import java.util.Comparator;
 
-import com.blackrook.expression.util.Utils;
+import com.blackrook.expression.struct.Utils;
 
 /**
  * An open variable set in which values can be set.

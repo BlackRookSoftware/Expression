@@ -13,7 +13,7 @@ import java.io.OutputStream;
 import com.blackrook.expression.ExpressionNode;
 import com.blackrook.expression.ExpressionStack;
 import com.blackrook.expression.ExpressionVariableContext;
-import com.blackrook.expression.util.SerialWriter;
+import com.blackrook.expression.struct.SerialWriter;
 
 /**
  * Single expression directive.

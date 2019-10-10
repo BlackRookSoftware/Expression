@@ -28,7 +28,7 @@
 		com.blackrook.expression.functions,
 		com.blackrook.expression.node,
 		com.blackrook.expression.resolver,
-		com.blackrook.expression.util
+		com.blackrook.expression.struct
 		"
 	/>
 	

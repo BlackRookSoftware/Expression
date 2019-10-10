@@ -18,7 +18,7 @@ import com.blackrook.expression.node.ExpressionDirective;
 import com.blackrook.expression.node.ExpressionDirectiveType;
 import com.blackrook.expression.node.ExpressionFunction;
 import com.blackrook.expression.node.ExpressionFunctionType;
-import com.blackrook.expression.util.Lexer;
+import com.blackrook.expression.struct.Lexer;
 
 /**
  * Creates expression objects from input text.

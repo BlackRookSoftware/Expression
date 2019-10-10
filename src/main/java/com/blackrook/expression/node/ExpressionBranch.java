@@ -15,7 +15,7 @@ import com.blackrook.expression.ExpressionNode;
 import com.blackrook.expression.ExpressionStack;
 import com.blackrook.expression.ExpressionValue;
 import com.blackrook.expression.ExpressionVariableContext;
-import com.blackrook.expression.util.Utils;
+import com.blackrook.expression.struct.Utils;
 
 /**
  * Expression branch.

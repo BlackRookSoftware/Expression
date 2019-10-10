@@ -14,7 +14,7 @@ import java.util.Map;
 
 import com.blackrook.expression.exception.ExpressionException;
 import com.blackrook.expression.node.ExpressionBranch;
-import com.blackrook.expression.util.Utils;
+import com.blackrook.expression.struct.Utils;
 
 /**
  * An expression object for evaluating dynamic calculations.
