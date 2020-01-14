@@ -132,7 +132,7 @@ public class ExpressionStack
 	}
 
 	/**
-	 * @return 
+	 * @return the stack size.
 	 */
 	public int size()
 	{
@@ -140,7 +140,7 @@ public class ExpressionStack
 	}
 
 	/**
-	 * @return
+	 * @return true if the stack is empty, false if not.
 	 */
 	public boolean isEmpty()
 	{
