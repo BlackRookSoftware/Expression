@@ -1,12 +1,11 @@
-# Black Rook Expressions
+# Black Rook Expression
 
 Copyright (c) 2017-2019 Black Rook Software. All rights reserved.  
-[https://github.com/BlackRookSoftware/Expressions](https://github.com/BlackRookSoftware/Expressions)
+[https://github.com/BlackRookSoftware/Expression](https://github.com/BlackRookSoftware/Expression)
 
-### NOTICE
+[Latest Release](https://github.com/BlackRookSoftware/Expression/releases/latest)  
+[Online Javadoc](https://blackrooksoftware.github.io/Expression/javadoc/)  
 
-This library is currently in **EXPERIMENTAL** status. This library's API
-may change many times in different ways over the course of its development!
 
 ### Required Libraries
 
