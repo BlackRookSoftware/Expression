@@ -15,7 +15,6 @@ import com.blackrook.expression.struct.SerialWriter;
 /**
  * Expression value encapsulation.
  * @author Matthew Tropiano
- * @since 2.32.0
  */
 public class ExpressionValue implements Comparable<ExpressionValue>
 {
