@@ -1,6 +1,6 @@
 # Black Rook Expression
 
-Copyright (c) 2017-2019 Black Rook Software. All rights reserved.  
+Copyright (c) 2017-2020 Black Rook Software. All rights reserved.  
 [https://github.com/BlackRookSoftware/Expression](https://github.com/BlackRookSoftware/Expression)
 
 [Latest Release](https://github.com/BlackRookSoftware/Expression/releases/latest)  
@@ -55,6 +55,10 @@ To clean up everything:
 
 	ant clean
 	
+### Javadocs
+
+Online Javadocs can be found at: [https://blackrooksoftware.github.io/Expression/javadoc/](https://blackrooksoftware.github.io/Expression/javadoc/)
+
 ### Other
 
 This program and the accompanying materials
