@@ -1,6 +1,6 @@
 # Black Rook Expression
 
-Copyright (c) 2017-2020 Black Rook Software. All rights reserved.  
+Copyright (c) 2017-2020 Black Rook Software.  
 [https://github.com/BlackRookSoftware/Expression](https://github.com/BlackRookSoftware/Expression)
 
 [Latest Release](https://github.com/BlackRookSoftware/Expression/releases/latest)  
