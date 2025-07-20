@@ -470,167 +470,167 @@ public final class ExpressionFactory
 			// make stacks.
 			LinkedList<Integer> operatorStack = new LinkedList<>();
 			int[] expressionValueCounter = new int[1];
-		    
-		    // was the last read token a value?
-			boolean lastWasValue = false;
-		    boolean keepGoing = true;		
-		
-		    while (keepGoing)
-		    {
-		    	// if no more tokens...
-		    	if (currentToken() == null)
-		    	{
-		    		keepGoing = false;
-		    	}
-		    	// if the last thing seen was a value....
-		    	else if (lastWasValue)
-		    	{
-		    		int type = currentToken().getType();
-		    		if (isBinaryOperatorType(type))
-		    		{
-		    			int nextOperator;
-		    	        switch (type)
-		    	        {
-		    	            case EKernel.TYPE_PLUS:
-		    	            case EKernel.TYPE_DASH:
-		    	            case EKernel.TYPE_STAR:
-		    	            case EKernel.TYPE_SLASH:
-		    	            case EKernel.TYPE_PERCENT:
-		    	            case EKernel.TYPE_AMPERSAND:
-		    	            case EKernel.TYPE_DOUBLEAMPERSAND:
-		    	            case EKernel.TYPE_PIPE:
-		    	            case EKernel.TYPE_DOUBLEPIPE:
-		    	            case EKernel.TYPE_CARAT:
-		    	            case EKernel.TYPE_GREATER:
-		    	            case EKernel.TYPE_GREATEREQUAL:
-		    	            case EKernel.TYPE_DOUBLEGREATER:
-		    	            case EKernel.TYPE_TRIPLEGREATER:
-		    	            case EKernel.TYPE_LESS:
-		    	            case EKernel.TYPE_DOUBLELESS:
-		    	            case EKernel.TYPE_LESSEQUAL:
-		    	            case EKernel.TYPE_DOUBLEEQUAL:
-		    	            case EKernel.TYPE_TRIPLEEQUAL:
-		    	            case EKernel.TYPE_NOTEQUAL:
-		    	            case EKernel.TYPE_NOTDOUBLEEQUAL:
-		    	            	nextOperator = type;
-		    	            	break;
-		    	            default:
-		            		{
-		        				addErrorMessage("Unexpected binary operator miss.");
-		        				return false;
-		            		}
-		    	        }
-		    	        
-		    	        nextToken();
-		    	        if (!operatorReduce(nodeList, operatorStack, expressionValueCounter, nextOperator))
-		    	        	return false;
-		    	        
-		    	        operatorStack.addFirst(nextOperator);
-		    	        lastWasValue = false;
-		    		}
-		    		else
-		    		{
-		    			// end on a value.
-		    			keepGoing = false;
-		    		}
-		    	}
-		    	// if the last thing seen was an operator (or nothing)...
-		    	else
-		    	{
-		    		int type = currentToken().getType();
-		    		// unary operator
-		    		if (isUnaryOperatorType(type))
-		    		{
-		    			switch (type)
-		        		{
-			                case EKernel.TYPE_PLUS:
-			                	operatorStack.push(EKernel.TYPE_ABSOLUTE);
-			                	break;
-			                case EKernel.TYPE_DASH:
-			                	operatorStack.push(EKernel.TYPE_NEGATE);
-			                	break;
-			                case EKernel.TYPE_EXCLAMATION:
-			                	operatorStack.push(EKernel.TYPE_EXCLAMATION);
-			                	break;
-			                case EKernel.TYPE_TILDE:
-			                	operatorStack.push(EKernel.TYPE_TILDE);
-			                	break;
-			                default:
-			                	throw new ExpressionParseException("Unexpected unary operator miss.");
-		        		}
-		    			nextToken();
-		    			lastWasValue = false;
-		    		}
-		    		// parens.
-		    		else if (matchType(EKernel.TYPE_LPAREN))
-		    		{
-		    			if (!parseExpressionPhrase(nodeList))
-		    				return false;
-		    			
-		    			if (!matchType(EKernel.TYPE_RPAREN))
-		    			{
-		    				addErrorMessage("Expected ending \")\".");
-		    				return false;
-		    			}
-		    			
-		    			expressionValueCounter[0] += 1;
-		    			lastWasValue = true;
-		    		}
-		    		// identifier - may be host function.
-		    		else if (currentType(EKernel.TYPE_IDENTIFIER))
-		    		{
-		    			String lexeme = currentToken().getLexeme();
-		
-		    			// is function?
-		    			ExpressionFunctionType functionType;
-		    			if ((functionType = functionResolver.getFunctionByName(lexeme)) != null)
-		    			{
-		    				nextToken();
-		    				if (!parseExpressionFunctionCall(nodeList, functionType))
-		    					return false;
-		    				
-		    				nodeList.add(ExpressionFunction.create(functionType));
-		    			}
-		    			// must be variable?
-		    			else
-		    			{
-		    				nodeList.add(ExpressionDirective.create(ExpressionDirectiveType.PUSH_VARIABLE, lexeme));
-		    				nextToken();
-		    			}
-		    			
-		    			expressionValueCounter[0] += 1;
-		    			lastWasValue = true;
-		    		}
-		    		// literal value?
-		    		else if (isValidLiteralType(type))
-		    		{
-		    			if (!parseExpressionSingleValue(nodeList))
-		                	return false;
-		
-		    			expressionValueCounter[0] += 1;
-		    			lastWasValue = true;
-		    		}
-		    		else
-		            	throw new ExpressionParseException("Expression - Expected value.");
-		    		
-		    	}
-		    	
-		    }
 			
-		    // end of expression - reduce.
-		    while (!operatorStack.isEmpty())
-		    {
-		        if (!expressionReduce(nodeList, operatorStack, expressionValueCounter))
-		            return false;
-		    }
-		    
-		    if (expressionValueCounter[0] != 1)
-		    {
-		        addErrorMessage("Expected valid expression.");
-		        return false;
-		    }
+			// was the last read token a value?
+			boolean lastWasValue = false;
+			boolean keepGoing = true;		
 		
-		    return true;
+			while (keepGoing)
+			{
+				// if no more tokens...
+				if (currentToken() == null)
+				{
+					keepGoing = false;
+				}
+				// if the last thing seen was a value....
+				else if (lastWasValue)
+				{
+					int type = currentToken().getType();
+					if (isBinaryOperatorType(type))
+					{
+						int nextOperator;
+						switch (type)
+						{
+							case EKernel.TYPE_PLUS:
+							case EKernel.TYPE_DASH:
+							case EKernel.TYPE_STAR:
+							case EKernel.TYPE_SLASH:
+							case EKernel.TYPE_PERCENT:
+							case EKernel.TYPE_AMPERSAND:
+							case EKernel.TYPE_DOUBLEAMPERSAND:
+							case EKernel.TYPE_PIPE:
+							case EKernel.TYPE_DOUBLEPIPE:
+							case EKernel.TYPE_CARAT:
+							case EKernel.TYPE_GREATER:
+							case EKernel.TYPE_GREATEREQUAL:
+							case EKernel.TYPE_DOUBLEGREATER:
+							case EKernel.TYPE_TRIPLEGREATER:
+							case EKernel.TYPE_LESS:
+							case EKernel.TYPE_DOUBLELESS:
+							case EKernel.TYPE_LESSEQUAL:
+							case EKernel.TYPE_DOUBLEEQUAL:
+							case EKernel.TYPE_TRIPLEEQUAL:
+							case EKernel.TYPE_NOTEQUAL:
+							case EKernel.TYPE_NOTDOUBLEEQUAL:
+								nextOperator = type;
+								break;
+							default:
+							{
+								addErrorMessage("Unexpected binary operator miss.");
+								return false;
+							}
+						}
+						
+						nextToken();
+						if (!operatorReduce(nodeList, operatorStack, expressionValueCounter, nextOperator))
+							return false;
+						
+						operatorStack.addFirst(nextOperator);
+						lastWasValue = false;
+					}
+					else
+					{
+						// end on a value.
+						keepGoing = false;
+					}
+				}
+				// if the last thing seen was an operator (or nothing)...
+				else
+				{
+					int type = currentToken().getType();
+					// unary operator
+					if (isUnaryOperatorType(type))
+					{
+						switch (type)
+						{
+							case EKernel.TYPE_PLUS:
+								operatorStack.push(EKernel.TYPE_ABSOLUTE);
+								break;
+							case EKernel.TYPE_DASH:
+								operatorStack.push(EKernel.TYPE_NEGATE);
+								break;
+							case EKernel.TYPE_EXCLAMATION:
+								operatorStack.push(EKernel.TYPE_EXCLAMATION);
+								break;
+							case EKernel.TYPE_TILDE:
+								operatorStack.push(EKernel.TYPE_TILDE);
+								break;
+							default:
+								throw new ExpressionParseException("Unexpected unary operator miss.");
+						}
+						nextToken();
+						lastWasValue = false;
+					}
+					// parens.
+					else if (matchType(EKernel.TYPE_LPAREN))
+					{
+						if (!parseExpressionPhrase(nodeList))
+							return false;
+						
+						if (!matchType(EKernel.TYPE_RPAREN))
+						{
+							addErrorMessage("Expected ending \")\".");
+							return false;
+						}
+						
+						expressionValueCounter[0] += 1;
+						lastWasValue = true;
+					}
+					// identifier - may be host function.
+					else if (currentType(EKernel.TYPE_IDENTIFIER))
+					{
+						String lexeme = currentToken().getLexeme();
+		
+						// is function?
+						ExpressionFunctionType functionType;
+						if ((functionType = functionResolver.getFunctionByName(lexeme)) != null)
+						{
+							nextToken();
+							if (!parseExpressionFunctionCall(nodeList, functionType))
+								return false;
+							
+							nodeList.add(ExpressionFunction.create(functionType));
+						}
+						// must be variable?
+						else
+						{
+							nodeList.add(ExpressionDirective.create(ExpressionDirectiveType.PUSH_VARIABLE, lexeme));
+							nextToken();
+						}
+						
+						expressionValueCounter[0] += 1;
+						lastWasValue = true;
+					}
+					// literal value?
+					else if (isValidLiteralType(type))
+					{
+						if (!parseExpressionSingleValue(nodeList))
+							return false;
+		
+						expressionValueCounter[0] += 1;
+						lastWasValue = true;
+					}
+					else
+						throw new ExpressionParseException("Expression - Expected value.");
+					
+				}
+				
+			}
+			
+			// end of expression - reduce.
+			while (!operatorStack.isEmpty())
+			{
+				if (!expressionReduce(nodeList, operatorStack, expressionValueCounter))
+					return false;
+			}
+			
+			if (expressionValueCounter[0] != 1)
+			{
+				addErrorMessage("Expected valid expression.");
+				return false;
+			}
+		
+			return true;
 		}
 
 		// Parses a function call.
@@ -738,226 +738,226 @@ public final class ExpressionFactory
 		private boolean expressionReduce(Queue<ExpressionNode> nodeList, LinkedList<Integer> operatorStack, int[] expressionValueCounter)
 		{
 			if (operatorStack.isEmpty())
-		        throw new ExpressionParseException("Internal error - operator stack must have one operator in it.");
+				throw new ExpressionParseException("Internal error - operator stack must have one operator in it.");
 		
-		    int operator = operatorStack.pollFirst();
-		    
-		    if (isBinaryOperatorType(operator))
-		        expressionValueCounter[0] -= 2;
-		    else
-		        expressionValueCounter[0] -= 1;
-		    
-		    if (expressionValueCounter[0] < 0)
-		        throw new ExpressionParseException("Internal error - value counter did not have enough counter.");
-		    
-		    expressionValueCounter[0] += 1; // the "push"
+			int operator = operatorStack.pollFirst();
+			
+			if (isBinaryOperatorType(operator))
+				expressionValueCounter[0] -= 2;
+			else
+				expressionValueCounter[0] -= 1;
+			
+			if (expressionValueCounter[0] < 0)
+				throw new ExpressionParseException("Internal error - value counter did not have enough counter.");
+			
+			expressionValueCounter[0] += 1; // the "push"
 		
-		    switch (operator)
-		    {
-		    	case EKernel.TYPE_ABSOLUTE:
+			switch (operator)
+			{
+				case EKernel.TYPE_ABSOLUTE:
 					nodeList.add(ExpressionDirective.create(ExpressionDirectiveType.ABSOLUTE));
-		            return true;
-		    	case EKernel.TYPE_EXCLAMATION: 
+					return true;
+				case EKernel.TYPE_EXCLAMATION: 
 					nodeList.add(ExpressionDirective.create(ExpressionDirectiveType.LOGICAL_NOT));
-		            return true;
-		    	case EKernel.TYPE_TILDE: 
+					return true;
+				case EKernel.TYPE_TILDE: 
 					nodeList.add(ExpressionDirective.create(ExpressionDirectiveType.NOT));
-		            return true;
-		    	case EKernel.TYPE_NEGATE:
+					return true;
+				case EKernel.TYPE_NEGATE:
 					nodeList.add(ExpressionDirective.create(ExpressionDirectiveType.NEGATE));
-		            return true;
-		        case EKernel.TYPE_PLUS:
+					return true;
+				case EKernel.TYPE_PLUS:
 					nodeList.add(ExpressionDirective.create(ExpressionDirectiveType.ADD));
-		            return true;
-		        case EKernel.TYPE_DASH:
+					return true;
+				case EKernel.TYPE_DASH:
 					nodeList.add(ExpressionDirective.create(ExpressionDirectiveType.SUBTRACT));
-		            return true;
-		        case EKernel.TYPE_STAR:
+					return true;
+				case EKernel.TYPE_STAR:
 					nodeList.add(ExpressionDirective.create(ExpressionDirectiveType.MULTIPLY));
-		            return true;
-		        case EKernel.TYPE_SLASH:
+					return true;
+				case EKernel.TYPE_SLASH:
 					nodeList.add(ExpressionDirective.create(ExpressionDirectiveType.DIVIDE));
-		            return true;
-		        case EKernel.TYPE_PERCENT:
+					return true;
+				case EKernel.TYPE_PERCENT:
 					nodeList.add(ExpressionDirective.create(ExpressionDirectiveType.MODULO));
-		            return true;
-		        case EKernel.TYPE_AMPERSAND:
+					return true;
+				case EKernel.TYPE_AMPERSAND:
 					nodeList.add(ExpressionDirective.create(ExpressionDirectiveType.AND));
-		            return true;
-		        case EKernel.TYPE_DOUBLEAMPERSAND:
+					return true;
+				case EKernel.TYPE_DOUBLEAMPERSAND:
 					nodeList.add(ExpressionDirective.create(ExpressionDirectiveType.LOGICAL_AND));
-		            return true;
-		        case EKernel.TYPE_PIPE:
+					return true;
+				case EKernel.TYPE_PIPE:
 					nodeList.add(ExpressionDirective.create(ExpressionDirectiveType.OR));
-		            return true;
-		        case EKernel.TYPE_DOUBLEPIPE:
+					return true;
+				case EKernel.TYPE_DOUBLEPIPE:
 					nodeList.add(ExpressionDirective.create(ExpressionDirectiveType.LOGICAL_OR));
-		            return true;
-		        case EKernel.TYPE_CARAT:
+					return true;
+				case EKernel.TYPE_CARAT:
 					nodeList.add(ExpressionDirective.create(ExpressionDirectiveType.XOR));
-		            return true;
-		        case EKernel.TYPE_GREATER:
+					return true;
+				case EKernel.TYPE_GREATER:
 					nodeList.add(ExpressionDirective.create(ExpressionDirectiveType.GREATER));
-		            return true;
-		        case EKernel.TYPE_GREATEREQUAL:
+					return true;
+				case EKernel.TYPE_GREATEREQUAL:
 					nodeList.add(ExpressionDirective.create(ExpressionDirectiveType.GREATER_OR_EQUAL));
-		            return true;
-		        case EKernel.TYPE_DOUBLEGREATER:
+					return true;
+				case EKernel.TYPE_DOUBLEGREATER:
 					nodeList.add(ExpressionDirective.create(ExpressionDirectiveType.RIGHT_SHIFT));
-		            return true;
-		        case EKernel.TYPE_TRIPLEGREATER:
+					return true;
+				case EKernel.TYPE_TRIPLEGREATER:
 					nodeList.add(ExpressionDirective.create(ExpressionDirectiveType.RIGHT_SHIFT_PADDED));
-		            return true;
-		        case EKernel.TYPE_LESS:
+					return true;
+				case EKernel.TYPE_LESS:
 					nodeList.add(ExpressionDirective.create(ExpressionDirectiveType.LESS));
-		            return true;
-		        case EKernel.TYPE_DOUBLELESS:
+					return true;
+				case EKernel.TYPE_DOUBLELESS:
 					nodeList.add(ExpressionDirective.create(ExpressionDirectiveType.LEFT_SHIFT));
-		            return true;
-		        case EKernel.TYPE_LESSEQUAL:
+					return true;
+				case EKernel.TYPE_LESSEQUAL:
 					nodeList.add(ExpressionDirective.create(ExpressionDirectiveType.LESS_OR_EQUAL));
-		            return true;
-		        case EKernel.TYPE_DOUBLEEQUAL:
+					return true;
+				case EKernel.TYPE_DOUBLEEQUAL:
 					nodeList.add(ExpressionDirective.create(ExpressionDirectiveType.EQUAL));
-		            return true;
-		        case EKernel.TYPE_TRIPLEEQUAL:
+					return true;
+				case EKernel.TYPE_TRIPLEEQUAL:
 					nodeList.add(ExpressionDirective.create(ExpressionDirectiveType.STRICT_EQUAL));
-		            return true;
-		        case EKernel.TYPE_NOTEQUAL:
+					return true;
+				case EKernel.TYPE_NOTEQUAL:
 					nodeList.add(ExpressionDirective.create(ExpressionDirectiveType.NOT_EQUAL));
-		            return true;
-		        case EKernel.TYPE_NOTDOUBLEEQUAL:
+					return true;
+				case EKernel.TYPE_NOTDOUBLEEQUAL:
 					nodeList.add(ExpressionDirective.create(ExpressionDirectiveType.STRICT_NOT_EQUAL));
-		            return true;
-		    	default:
-		            throw new ExpressionParseException("Internal error - Bad operator pushed for expression.");
-		    }
-		    
+					return true;
+				default:
+					throw new ExpressionParseException("Internal error - Bad operator pushed for expression.");
+			}
+			
 		}
 
 		// Return true if token type can be a unary operator.
 		private boolean isValidLiteralType(int tokenType)
 		{
-		    switch (tokenType)
-		    {
-		        case EKernel.TYPE_NUMBER:
-		        case EKernel.TYPE_TRUE:
-		        case EKernel.TYPE_FALSE:
-		        case EKernel.TYPE_INFINITY:
-		        case EKernel.TYPE_NAN:
-		            return true;
-		        default:
-		            return false;
-		    }
+			switch (tokenType)
+			{
+				case EKernel.TYPE_NUMBER:
+				case EKernel.TYPE_TRUE:
+				case EKernel.TYPE_FALSE:
+				case EKernel.TYPE_INFINITY:
+				case EKernel.TYPE_NAN:
+					return true;
+				default:
+					return false;
+			}
 		}
 
 		// Return true if token type can be a unary operator.
 		private boolean isUnaryOperatorType(int tokenType)
 		{
-		    switch (tokenType)
-		    {
-		        case EKernel.TYPE_DASH:
-		        case EKernel.TYPE_PLUS:
-		        case EKernel.TYPE_EXCLAMATION:
-		        case EKernel.TYPE_TILDE:
-		            return true;
-		        default:
-		            return false;
-		    }
+			switch (tokenType)
+			{
+				case EKernel.TYPE_DASH:
+				case EKernel.TYPE_PLUS:
+				case EKernel.TYPE_EXCLAMATION:
+				case EKernel.TYPE_TILDE:
+					return true;
+				default:
+					return false;
+			}
 		}
 
 		// Return true if token type can be a binary operator.
 		private boolean isBinaryOperatorType(int tokenType)
 		{
-		    switch (tokenType)
-		    {
-		        case EKernel.TYPE_PLUS:
-		        case EKernel.TYPE_DASH:
-		        case EKernel.TYPE_STAR:
-		        case EKernel.TYPE_SLASH:
-		        case EKernel.TYPE_PERCENT:
-		        case EKernel.TYPE_AMPERSAND:
-		        case EKernel.TYPE_DOUBLEAMPERSAND:
-		        case EKernel.TYPE_PIPE:
-		        case EKernel.TYPE_DOUBLEPIPE:
-		        case EKernel.TYPE_CARAT:
-		        case EKernel.TYPE_GREATER:
-		        case EKernel.TYPE_GREATEREQUAL:
-		        case EKernel.TYPE_DOUBLEGREATER:
-		        case EKernel.TYPE_TRIPLEGREATER:
-		        case EKernel.TYPE_LESS:
-		        case EKernel.TYPE_DOUBLELESS:
-		        case EKernel.TYPE_LESSEQUAL:
-		        case EKernel.TYPE_DOUBLEEQUAL:
-		        case EKernel.TYPE_TRIPLEEQUAL:
-		        case EKernel.TYPE_NOTEQUAL:
-		        case EKernel.TYPE_NOTDOUBLEEQUAL:
-		            return true;
-		        default:
-		            return false;
-		    }
+			switch (tokenType)
+			{
+				case EKernel.TYPE_PLUS:
+				case EKernel.TYPE_DASH:
+				case EKernel.TYPE_STAR:
+				case EKernel.TYPE_SLASH:
+				case EKernel.TYPE_PERCENT:
+				case EKernel.TYPE_AMPERSAND:
+				case EKernel.TYPE_DOUBLEAMPERSAND:
+				case EKernel.TYPE_PIPE:
+				case EKernel.TYPE_DOUBLEPIPE:
+				case EKernel.TYPE_CARAT:
+				case EKernel.TYPE_GREATER:
+				case EKernel.TYPE_GREATEREQUAL:
+				case EKernel.TYPE_DOUBLEGREATER:
+				case EKernel.TYPE_TRIPLEGREATER:
+				case EKernel.TYPE_LESS:
+				case EKernel.TYPE_DOUBLELESS:
+				case EKernel.TYPE_LESSEQUAL:
+				case EKernel.TYPE_DOUBLEEQUAL:
+				case EKernel.TYPE_TRIPLEEQUAL:
+				case EKernel.TYPE_NOTEQUAL:
+				case EKernel.TYPE_NOTDOUBLEEQUAL:
+					return true;
+				default:
+					return false;
+			}
 		}
 
 		// Return operator precedence (higher is better).
 		private int getOperatorPrecedence(int tokenType)
 		{
-		    switch (tokenType)
-		    {
-		    	case EKernel.TYPE_ABSOLUTE: 
-		    	case EKernel.TYPE_EXCLAMATION: 
-		    	case EKernel.TYPE_TILDE: 
-		    	case EKernel.TYPE_NEGATE:
-		    		return 20;
-		        case EKernel.TYPE_STAR:
-		        case EKernel.TYPE_SLASH:
-		        case EKernel.TYPE_PERCENT:
-		        	return 18;
-		        case EKernel.TYPE_PLUS:
-		        case EKernel.TYPE_DASH:
-		        	return 16;
-		        case EKernel.TYPE_DOUBLEGREATER:
-		        case EKernel.TYPE_TRIPLEGREATER:
-		        case EKernel.TYPE_DOUBLELESS:
-		        	return 14;
-		        case EKernel.TYPE_GREATER:
-		        case EKernel.TYPE_GREATEREQUAL:
-		        case EKernel.TYPE_LESS:
-		        case EKernel.TYPE_LESSEQUAL:
-		        	return 12;
-		        case EKernel.TYPE_DOUBLEEQUAL:
-		        case EKernel.TYPE_TRIPLEEQUAL:
-		        case EKernel.TYPE_NOTEQUAL:
-		        case EKernel.TYPE_NOTDOUBLEEQUAL:
-		        	return 10;
-		        case EKernel.TYPE_AMPERSAND:
-		        	return 8;
-		        case EKernel.TYPE_CARAT:
-		        	return 6;
-		        case EKernel.TYPE_PIPE:
-		        	return 4;
-		        case EKernel.TYPE_DOUBLEAMPERSAND:
-		        	return 2;
-		        case EKernel.TYPE_DOUBLEPIPE:
-		        	return 1;
-		    	default:
-		    		return 0;
-		    }
+			switch (tokenType)
+			{
+				case EKernel.TYPE_ABSOLUTE: 
+				case EKernel.TYPE_EXCLAMATION: 
+				case EKernel.TYPE_TILDE: 
+				case EKernel.TYPE_NEGATE:
+					return 20;
+				case EKernel.TYPE_STAR:
+				case EKernel.TYPE_SLASH:
+				case EKernel.TYPE_PERCENT:
+					return 18;
+				case EKernel.TYPE_PLUS:
+				case EKernel.TYPE_DASH:
+					return 16;
+				case EKernel.TYPE_DOUBLEGREATER:
+				case EKernel.TYPE_TRIPLEGREATER:
+				case EKernel.TYPE_DOUBLELESS:
+					return 14;
+				case EKernel.TYPE_GREATER:
+				case EKernel.TYPE_GREATEREQUAL:
+				case EKernel.TYPE_LESS:
+				case EKernel.TYPE_LESSEQUAL:
+					return 12;
+				case EKernel.TYPE_DOUBLEEQUAL:
+				case EKernel.TYPE_TRIPLEEQUAL:
+				case EKernel.TYPE_NOTEQUAL:
+				case EKernel.TYPE_NOTDOUBLEEQUAL:
+					return 10;
+				case EKernel.TYPE_AMPERSAND:
+					return 8;
+				case EKernel.TYPE_CARAT:
+					return 6;
+				case EKernel.TYPE_PIPE:
+					return 4;
+				case EKernel.TYPE_DOUBLEAMPERSAND:
+					return 2;
+				case EKernel.TYPE_DOUBLEPIPE:
+					return 1;
+				default:
+					return 0;
+			}
 		}
 
 		// Return true if token type is an operator that is right-associative.
 		private boolean isOperatorRightAssociative(int tokenType)
 		{
-		    switch (tokenType)
-		    {
-		    	case EKernel.TYPE_ABSOLUTE: 
-		    	case EKernel.TYPE_EXCLAMATION: 
-		    	case EKernel.TYPE_TILDE: 
-		    	case EKernel.TYPE_NEGATE: 
-		    	case EKernel.TYPE_DOUBLEPIPE:
-		    		return true;
-		    	default:
-		    		return false;
-		    }
+			switch (tokenType)
+			{
+				case EKernel.TYPE_ABSOLUTE: 
+				case EKernel.TYPE_EXCLAMATION: 
+				case EKernel.TYPE_TILDE: 
+				case EKernel.TYPE_NEGATE: 
+				case EKernel.TYPE_DOUBLEPIPE:
+					return true;
+				default:
+					return false;
+			}
 		
 		}
 
